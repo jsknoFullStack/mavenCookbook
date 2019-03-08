@@ -71,7 +71,7 @@
                 <plugins>
                     <!--Second way to change it to another one
                     Try out: mvn -P changingMvnCompilerTo7 clean compile
-                    It should fail for the use of lambdas in App.java
+                    It should fail for the use of lambdas in com.maven.jskno.ParentApp.java
                     -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
