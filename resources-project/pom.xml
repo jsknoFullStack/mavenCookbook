@@ -1,0 +1,113 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.maven.jskno</groupId>
+    <artifactId>resources-project</artifactId>
+    <packaging>jar</packaging>
+    <version>1.0-SNAPSHOT</version>
+
+    <name>resources-project</name>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <filters>
+                    <filter>tokens-dev.properties</filter>
+                </filters>
+            </build>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <build>
+                <filters>
+                    <filter>tokens-prod.properties</filter>
+                </filters>
+            </build>
+        </profile>
+    </profiles>
+
+    <build>
+
+        <filters>
+            <filter>my-filter-values.properties</filter>
+        </filters>
+        <!--What if we had resources in additional folders? The Maven Resources plugin allows us to
+        configure these additional folders.-->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <!--to perform variable replacements on project resources. This feature is useful when you
+                need to parameterize a build with different configuration values, depending on the
+                deployment platform or environments.
+                You can define variables in your resources. Let us see how we can get the value of these
+                variables from properties, resource filter files, and the command line-->
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>${basedir}/src/main/additional</directory>
+                <filtering>true</filtering>
+                <targetPath>${project.build.directory}/additional</targetPath>
+            </resource>
+            <resource>
+                <directory>src/main/xml</directory>
+                <includes>
+                    <include>*.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/json</directory>
+                <includes>
+                    <include>include.json</include>
+                </includes>
+                <excludes>
+                    <exclude>exclude.json</exclude>
+                </excludes>
+            </resource>
+        </resources>
+
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <includes>
+                    <include>*</include>
+                    <include>json/testInclude.json</include>
+                </includes>
+                <excludes>
+                    <exclude>/json/testExclude.json</exclude>
+                </excludes>
+            </testResource>
+            <testResource>
+                <directory>src/test/xml</directory>
+                <targetPath>${project.build.directory}/xml</targetPath>
+                <includes>
+                    <include>test*.xml</include>
+                </includes>
+            </testResource>
+        </testResources>
+
+    </build>
+
+</project>

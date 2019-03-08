@@ -1,0 +1,92 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.maven.jskno</groupId>
+    <artifactId>compile-project</artifactId>
+    <packaging>jar</packaging>
+    <version>1.0-SNAPSHOT</version>
+
+    <name>compile-project</name>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <!-- Maven Compiler plugin, by default, considers the source and target Java version to be 1.5
+        First way to change it to another one-->
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+
+        <JAVA11.HOME>C:/Jose/Software/JavaPortable/jdk-11.0.1_windows-x64_bin/jdk-11.0.1</JAVA11.HOME>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+
+        <profile>
+            <id>changingMvnCompilerTo11</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <!--Changing the compiler used by the Maven Compiler plugin
+                    Let us say we are running Maven using JDK 8 (try mvn -v) but our project requires the sources to be
+                    compiled using JDK 11. Essentially, we want to use a JDK for compilation that is different from
+                    the JDK running Maven.
+                    In this case, we can specify the compiler we want to use to Maven
+                    mvn -P changingMvnCompilerTo11 clean compile
+                    -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.8.0</version>
+                        <configuration>
+                            <verbose>true</verbose>
+                            <fork>true</fork>
+                            <executable>${JAVA11.HOME}/bin/javac</executable>
+                            <compilerVersion>11</compilerVersion>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>changingMvnCompilerTo7</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <!--Second way to change it to another one
+                    Try out: mvn -P changingMvnCompilerTo7 clean compile
+                    It should fail for the use of lambdas in App.java
+                    -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.8.0</version>
+                        <configuration>
+                            <source>1.7</source>
+                            <target>1.7</target>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+    </profiles>
+
+
+</project>
